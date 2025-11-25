@@ -6,3 +6,5 @@ httpx
 pyyaml
 plotly
 sqlalchemy
+fastapi
+uvicorn
