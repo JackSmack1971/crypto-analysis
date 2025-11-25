@@ -1,0 +1,54 @@
+application:
+  name: "Crypto Analysis Platform"
+  mode: "research"
+  log_level: "INFO"
+
+data_sources:
+  primary_exchange: "binance"
+  coingecko_api_key: "${COINGECKO_API_KEY}"
+  
+  poll_intervals:
+    ohlcv: 60
+    overview: 300
+    orderbook: 10
+
+storage:
+  database: "data/crypto.db"
+  cache_ttl_sec: 300
+  auto_cleanup_days: 90
+  backup_enabled: true
+  backup_interval_hours: 24
+
+watchlist_file: "config/watchlists.yaml"
+
+indicators:
+  defaults:
+    RSI:
+      period: 14
+    MACD:
+      fast: 12
+      slow: 26
+      signal: 9
+    BB:
+      period: 20
+      std_dev: 2.0
+    ATR:
+      period: 14
+
+alerts:
+  enabled: true
+  check_interval_sec: 60
+  webhooks:
+    discord: "${DISCORD_WEBHOOK_URL}"
+    telegram: "${TELEGRAM_BOT_TOKEN}"
+
+backtesting:
+  default_capital: 10000.0
+  default_timeframe: "1h"
+  commission: 0.001
+  slippage: 0.0005
+
+ui:
+  theme: "dark"
+  default_chart_bars: 500
+  refresh_interval_sec: 5

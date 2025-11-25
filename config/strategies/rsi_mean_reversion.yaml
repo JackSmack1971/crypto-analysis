@@ -1,0 +1,34 @@
+strategy:
+  name: "RSI Mean Reversion"
+  description: "Buy oversold, sell overbought with confirmation"
+  
+  parameters:
+    rsi_period: 14
+    rsi_oversold: 30
+    rsi_overbought: 70
+    volume_confirmation: true
+    volume_threshold_multiplier: 1.5
+    
+  entry_conditions:
+    - indicator: RSI
+      operator: "<"
+      value: "$rsi_oversold"
+    - indicator: volume
+      operator: ">"
+      value: "$avg_volume * $volume_threshold_multiplier"
+  
+  exit_conditions:
+    - indicator: RSI
+      operator: ">"
+      value: 50
+    - type: stop_loss
+      value: 0.02
+    - type: take_profit
+      value: 0.05
+  
+  risk_management:
+    position_size: 0.1
+    max_positions: 3
+    trailing_stop: true
+    trailing_stop_activation: 0.03
+    trailing_stop_distance: 0.015
