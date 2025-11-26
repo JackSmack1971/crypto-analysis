@@ -4,10 +4,18 @@ import { useAppStore } from "@/store/app.store";
 import { cn } from "@/utils/cn";
 import { Button } from "@/components/ui/Button";
 import { MenuIcon, XIcon, SunIcon, MoonIcon } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { apiService } from "@/services/api.service";
+import { Toaster } from "@/components/ui/Toast";
 
 export const Layout: React.FC = () => {
-    const { sidebarOpen, toggleSidebar, chartPreferences, updateChartPreferences } =
+    const { sidebarOpen, toggleSidebar, chartPreferences, updateChartPreferences, selectedWatchlist, setWatchlist } =
         useAppStore();
+
+    const { data: watchlists } = useQuery({
+        queryKey: ["watchlists"],
+        queryFn: () => apiService.getWatchlists(),
+    });
 
     const toggleTheme = () => {
         updateChartPreferences({
@@ -37,6 +45,7 @@ export const Layout: React.FC = () => {
                 "bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text"
             )}
         >
+            <Toaster />
             {/* Navigation Bar */}
             <nav
                 className={cn(
@@ -87,11 +96,25 @@ export const Layout: React.FC = () => {
                 >
                     <div className="p-4 overflow-y-auto h-full">
                         <h2 className="text-sm font-semibold mb-4 text-light-muted dark:text-dark-muted">Watchlists</h2>
-                        {/* Sidebar content here - placeholder */}
+                        <h2 className="text-sm font-semibold mb-4 text-light-muted dark:text-dark-muted">Watchlists</h2>
                         <div className="space-y-2">
-                            <Button variant="ghost" className="w-full justify-start">Major Caps</Button>
-                            <Button variant="ghost" className="w-full justify-start">DeFi</Button>
-                            <Button variant="ghost" className="w-full justify-start">Layer 1</Button>
+                            {watchlists?.map((wl) => (
+                                <Button
+                                    key={wl.name}
+                                    variant={selectedWatchlist === wl.name ? "secondary" : "ghost"}
+                                    className="w-full justify-start"
+                                    onClick={() => setWatchlist(wl.name)}
+                                >
+                                    {wl.name}
+                                </Button>
+                            ))}
+                            {!watchlists && (
+                                <>
+                                    <Button variant="ghost" className="w-full justify-start">Major Caps</Button>
+                                    <Button variant="ghost" className="w-full justify-start">DeFi</Button>
+                                    <Button variant="ghost" className="w-full justify-start">Layer 1</Button>
+                                </>
+                            )}
                         </div>
                     </div>
                 </aside>

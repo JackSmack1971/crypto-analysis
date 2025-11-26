@@ -1,11 +1,7 @@
 import axios, { type AxiosInstance, type AxiosError } from "axios";
 import type { MarketData, BacktestResult, MultiTimeframeData, APIResponse } from "@/types/market.types";
 
-// Simple toast placeholder if UI component not ready
-const toast = {
-    error: (msg: string) => console.error(msg),
-    success: (msg: string) => console.log(msg)
-};
+import { toast } from "@/components/ui/Toast";
 
 class APIService {
     private client: AxiosInstance;
