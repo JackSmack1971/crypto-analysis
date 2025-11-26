@@ -4,19 +4,12 @@ import { useAppStore } from "@/store/app.store";
 import { cn } from "@/utils/cn";
 import { Button } from "@/components/ui/Button";
 import { MenuIcon, XIcon, SunIcon, MoonIcon } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
-import { apiService } from "@/services/api.service";
 import { Toaster } from "@/components/ui/Toast";
-import { Skeleton } from "@/components/ui/Skeleton";
+import { WatchlistManager } from "@/components/sidebar/WatchlistManager";
 
 export const Layout: React.FC = () => {
-    const { sidebarOpen, toggleSidebar, chartPreferences, updateChartPreferences, selectedWatchlist, setWatchlist } =
+    const { sidebarOpen, toggleSidebar, chartPreferences, updateChartPreferences } =
         useAppStore();
-
-    const { data: watchlists, isLoading } = useQuery({
-        queryKey: ["watchlists"],
-        queryFn: () => apiService.getWatchlists(),
-    });
 
     const toggleTheme = () => {
         updateChartPreferences({
@@ -97,29 +90,7 @@ export const Layout: React.FC = () => {
                 >
                     <div className="p-4 overflow-y-auto h-full">
                         <h2 className="text-sm font-semibold mb-4 text-light-muted dark:text-dark-muted">Watchlists</h2>
-                        <h2 className="text-sm font-semibold mb-4 text-light-muted dark:text-dark-muted">Watchlists</h2>
-                        <div className="space-y-2">
-                            {isLoading ? (
-                                Array.from({ length: 5 }).map((_, i) => (
-                                    <Skeleton key={i} className="h-9 w-full rounded-md" />
-                                ))
-                            ) : watchlists?.map((wl) => (
-                                <Button
-                                    key={wl.name}
-                                    variant={selectedWatchlist === wl.name ? "secondary" : "ghost"}
-                                    className="w-full justify-start truncate"
-                                    onClick={() => setWatchlist(wl.name)}
-                                    title={wl.name}
-                                >
-                                    {wl.name}
-                                </Button>
-                            ))}
-                            {!isLoading && (!watchlists || watchlists.length === 0) && (
-                                <div className="text-sm text-muted-foreground p-2">
-                                    No watchlists found
-                                </div>
-                            )}
-                        </div>
+                        <WatchlistManager />
                     </div>
                 </aside>
 

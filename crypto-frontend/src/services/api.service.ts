@@ -163,6 +163,46 @@ class APIService {
 
         return response.data.data!;
     }
+
+    async createWatchlist(name: string): Promise<Array<{ name: string; assets: unknown[] }>> {
+        const response = await this.client.post<
+            APIResponse<Array<{ name: string; assets: unknown[] }>>
+        >("/api/v1/watchlists", { name });
+
+        if (!response.data.success) {
+            throw new Error(response.data.error?.message || "Unknown error");
+        }
+
+        return response.data.data!;
+    }
+
+    async updateWatchlist(
+        name: string,
+        newName: string,
+        assets?: unknown[]
+    ): Promise<Array<{ name: string; assets: unknown[] }>> {
+        const response = await this.client.put<
+            APIResponse<Array<{ name: string; assets: unknown[] }>>
+        >(`/api/v1/watchlists/${encodeURIComponent(name)}`, { new_name: newName, assets });
+
+        if (!response.data.success) {
+            throw new Error(response.data.error?.message || "Unknown error");
+        }
+
+        return response.data.data!;
+    }
+
+    async deleteWatchlist(name: string): Promise<Array<{ name: string; assets: unknown[] }>> {
+        const response = await this.client.delete<
+            APIResponse<Array<{ name: string; assets: unknown[] }>>
+        >(`/api/v1/watchlists/${encodeURIComponent(name)}`);
+
+        if (!response.data.success) {
+            throw new Error(response.data.error?.message || "Unknown error");
+        }
+
+        return response.data.data!;
+    }
 }
 
 // Singleton export

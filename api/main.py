@@ -1,6 +1,6 @@
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, Body
 from fastapi.middleware.cors import CORSMiddleware
-from typing import List, Optional
+from typing import List, Optional, Any
 import yaml
 import asyncio
 import pandas as pd
@@ -56,8 +56,66 @@ def success_response(data: Any):
 def error_response(message: str, code: str = "INTERNAL_ERROR"):
     return APIResponse(success=False, error=APIError(message=message, code=code))
 
+def save_watchlists(data):
+    with open("config/watchlists.yaml", "w") as f:
+        yaml.dump(data, f)
+
 @app.get("/api/v1/watchlists")
 async def get_watchlists():
+    # Reload to get latest changes
+    global watchlists
+    watchlists = load_watchlists()
+    return success_response(watchlists['watchlists'])
+
+@app.post("/api/v1/watchlists")
+async def create_watchlist(name: str = Body(..., embed=True)):
+    global watchlists
+    watchlists = load_watchlists()
+    
+    if any(w['name'] == name for w in watchlists['watchlists']):
+        return error_response("Watchlist already exists", "DUPLICATE")
+        
+    new_watchlist = {
+        "name": name,
+        "assets": []
+    }
+    
+    watchlists['watchlists'].append(new_watchlist)
+    save_watchlists(watchlists)
+    return success_response(watchlists['watchlists'])
+
+@app.put("/api/v1/watchlists/{name}")
+async def update_watchlist(name: str, new_name: str = Body(..., embed=True), assets: Optional[List[dict]] = Body(None, embed=True)):
+    global watchlists
+    watchlists = load_watchlists()
+    
+    watchlist = next((w for w in watchlists['watchlists'] if w['name'] == name), None)
+    if not watchlist:
+        return error_response("Watchlist not found", "NOT_FOUND")
+        
+    if new_name and new_name != name:
+        if any(w['name'] == new_name for w in watchlists['watchlists']):
+            return error_response("Watchlist name already exists", "DUPLICATE")
+        watchlist['name'] = new_name
+        
+    if assets is not None:
+        watchlist['assets'] = assets
+        
+    save_watchlists(watchlists)
+    return success_response(watchlists['watchlists'])
+
+@app.delete("/api/v1/watchlists/{name}")
+async def delete_watchlist(name: str):
+    global watchlists
+    watchlists = load_watchlists()
+    
+    initial_len = len(watchlists['watchlists'])
+    watchlists['watchlists'] = [w for w in watchlists['watchlists'] if w['name'] != name]
+    
+    if len(watchlists['watchlists']) == initial_len:
+        return error_response("Watchlist not found", "NOT_FOUND")
+        
+    save_watchlists(watchlists)
     return success_response(watchlists['watchlists'])
 
 @app.get("/api/v1/symbols")
