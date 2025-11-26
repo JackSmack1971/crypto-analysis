@@ -7,7 +7,7 @@ import { ChevronDownIcon, Loader2Icon } from "lucide-react";
 export const SymbolSelector: React.FC = () => {
     const { selectedSymbol, setSymbol, selectedWatchlist } = useAppStore();
 
-    const { data: watchlists, isLoading } = useQuery({
+    const { data: watchlists, isLoading, isError, refetch } = useQuery({
         queryKey: ["watchlists"],
         queryFn: () => apiService.getWatchlists(),
     });
@@ -15,11 +15,7 @@ export const SymbolSelector: React.FC = () => {
     // Find the current watchlist object
     const currentWatchlist = watchlists?.find((wl) => wl.name === selectedWatchlist);
 
-    // Extract assets, defaulting to empty array if not found
-    // The API returns assets as unknown[], we assume they are strings or objects with a symbol property
-    // Based on common patterns, let's assume they are strings for now, or handle objects if needed.
-    // If assets are objects { symbol: "BTC/USDT", ... }, we map them.
-    // If assets are strings "BTC/USDT", we use them directly.
+    // Extract assets
     const assets = React.useMemo(() => {
         if (!currentWatchlist?.assets) return [];
         return currentWatchlist.assets.map((asset: any) =>
@@ -30,6 +26,17 @@ export const SymbolSelector: React.FC = () => {
     const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSymbol(e.target.value);
     };
+
+    if (isError) {
+        return (
+            <div className="relative min-w-[200px]">
+                <div className="flex items-center gap-2 text-red-500 text-sm p-2 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
+                    <span className="text-xs">Failed to load assets</span>
+                    <button onClick={() => refetch()} className="text-xs underline hover:no-underline">Retry</button>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="relative min-w-[200px]">
@@ -44,7 +51,7 @@ export const SymbolSelector: React.FC = () => {
                         <select
                             value={selectedSymbol}
                             onChange={handleChange}
-                            className="w-full h-10 pl-3 pr-10 appearance-none bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors cursor-pointer"
+                            className="w-full h-10 pl-3 pr-10 appearance-none bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                             disabled={assets.length === 0}
                         >
                             {assets.length > 0 ? (

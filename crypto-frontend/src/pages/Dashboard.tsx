@@ -58,7 +58,12 @@ export const Dashboard: React.FC = () => {
                             error={error?.message}
                         />
                     ) : (
-                        <MarketDataTable data={data?.ohlcv || []} />
+                        <MarketDataTable
+                            data={data?.ohlcv || []}
+                            isLoading={isLoading}
+                            error={error}
+                            onRetry={() => window.location.reload()} // Simple retry for now, ideally useMarketData should expose refetch
+                        />
                     )}
                 </div>
 

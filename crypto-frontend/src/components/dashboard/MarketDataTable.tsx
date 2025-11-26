@@ -9,12 +9,23 @@ import {
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { columns, type MarketDataRow } from "./columns";
 import { cn } from "@/utils/cn";
+import { ErrorState } from "@/components/ui/ErrorState";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { Skeleton } from "@/components/ui/Skeleton";
 
 interface MarketDataTableProps {
     data: MarketDataRow[];
+    isLoading?: boolean;
+    error?: Error | null;
+    onRetry?: () => void;
 }
 
-export const MarketDataTable: React.FC<MarketDataTableProps> = ({ data }) => {
+export const MarketDataTable: React.FC<MarketDataTableProps> = ({
+    data,
+    isLoading = false,
+    error = null,
+    onRetry
+}) => {
     const [sorting, setSorting] = useState<SortingState>([]);
     const parentRef = useRef<HTMLDivElement>(null);
 
@@ -37,6 +48,43 @@ export const MarketDataTable: React.FC<MarketDataTableProps> = ({ data }) => {
         estimateSize: () => 48, // Estimated row height
         overscan: 10,
     });
+
+    if (error) {
+        return (
+            <div className="rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 h-[500px] flex items-center justify-center">
+                <ErrorState
+                    message={error.message || "Failed to load market data"}
+                    onRetry={onRetry}
+                />
+            </div>
+        );
+    }
+
+    if (isLoading) {
+        return (
+            <div className="rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 h-[500px] p-4 space-y-4">
+                <div className="flex gap-4 mb-6">
+                    {[1, 2, 3, 4, 5].map((i) => (
+                        <Skeleton key={i} className="h-6 w-24" />
+                    ))}
+                </div>
+                {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+                    <Skeleton key={i} className="h-12 w-full" />
+                ))}
+            </div>
+        );
+    }
+
+    if (!isLoading && data.length === 0) {
+        return (
+            <div className="rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 h-[500px] flex items-center justify-center">
+                <EmptyState
+                    title="No Market Data"
+                    message="No market data available for the selected criteria."
+                />
+            </div>
+        );
+    }
 
     return (
         <div className="rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden">
