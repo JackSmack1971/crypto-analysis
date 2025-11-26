@@ -2,8 +2,9 @@ import React from "react";
 // import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/Dialog"; // Removed as we use custom Modal
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
-import { XIcon, TrendingUpIcon, TrendingDownIcon, ActivityIcon } from "lucide-react";
+import { XIcon, TrendingUpIcon, TrendingDownIcon, ActivityIcon, DownloadIcon } from "lucide-react";
 import type { BacktestResult } from "@/types/market.types";
+import { exportToCsv } from "@/utils/export";
 
 interface BacktestResultsModalProps {
     isOpen: boolean;
@@ -41,8 +42,26 @@ export const BacktestResultsModal: React.FC<BacktestResultsModalProps> = ({ isOp
     const { metrics, trades } = results;
     const isProfitable = metrics.totalReturnPct >= 0;
 
+    const handleExport = () => {
+        const data = trades.map(t => ({
+            EntryTime: new Date(t.entryTime).toLocaleString(),
+            Type: t.reason,
+            EntryPrice: t.entryPrice,
+            ExitPrice: t.exitPrice,
+            PnL: t.pnl,
+            PnL_Percent: t.pnlPct
+        }));
+        exportToCsv(data, `backtest_results_${Date.now()}.csv`);
+    };
+
     return (
         <Modal isOpen={isOpen} onClose={onClose} title="Backtest Results">
+            <div className="absolute top-4 right-12">
+                <Button variant="secondary" size="sm" onClick={handleExport} className="gap-2">
+                    <DownloadIcon size={14} />
+                    Export CSV
+                </Button>
+            </div>
             <div className="space-y-6">
                 {/* Metrics Grid */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

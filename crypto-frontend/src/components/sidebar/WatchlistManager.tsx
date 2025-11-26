@@ -4,9 +4,10 @@ import { apiService } from "@/services/api.service";
 import { useAppStore } from "@/store/app.store";
 import { Button } from "@/components/ui/Button";
 import { Skeleton } from "@/components/ui/Skeleton";
-import { PlusIcon, PencilIcon, TrashIcon, CheckIcon, XIcon } from "lucide-react";
+import { PlusIcon, PencilIcon, TrashIcon, CheckIcon, XIcon, DownloadIcon } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/utils/cn";
+import { exportToCsv } from "@/utils/export";
 
 export const WatchlistManager: React.FC = () => {
     const { selectedWatchlist, setWatchlist } = useAppStore();
@@ -84,20 +85,47 @@ export const WatchlistManager: React.FC = () => {
         setEditName(name);
     };
 
+    const handleExport = () => {
+        if (!watchlists || !selectedWatchlist) return;
+
+        const currentWatchlist = watchlists.find(w => w.name === selectedWatchlist);
+        if (!currentWatchlist || !currentWatchlist.assets || currentWatchlist.assets.length === 0) {
+            toast.error("No symbols to export");
+            return;
+        }
+
+        const data = currentWatchlist.assets.map((symbol: any) => ({ symbol }));
+        exportToCsv(data, `${selectedWatchlist}_watchlist.csv`);
+        toast.success("Watchlist exported");
+    };
+
     return (
         <div id="tour-watchlist" className="flex flex-col h-full border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
             <div className="p-4 border-b border-gray-200 dark:border-gray-800">
                 <div className="flex items-center justify-between">
                     <h2 className="text-sm font-semibold text-light-muted dark:text-dark-muted">Watchlists</h2>
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-6 w-6 p-0"
-                        onClick={() => setIsCreating(true)}
-                        disabled={isCreating}
-                    >
-                        <PlusIcon size={16} />
-                    </Button>
+                    <div className="flex items-center gap-1">
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-6 w-6 p-0"
+                            onClick={handleExport}
+                            title="Export Watchlist"
+                            disabled={!selectedWatchlist}
+                        >
+                            <DownloadIcon size={16} />
+                        </Button>
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-6 w-6 p-0"
+                            onClick={() => setIsCreating(true)}
+                            disabled={isCreating}
+                            title="Create Watchlist"
+                        >
+                            <PlusIcon size={16} />
+                        </Button>
+                    </div>
                 </div>
 
                 {isCreating && (
