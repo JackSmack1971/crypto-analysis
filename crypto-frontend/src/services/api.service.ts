@@ -125,6 +125,16 @@ class APIService {
         return response.data.data!;
     }
 
+    async getAllSymbols(): Promise<string[]> {
+        const response = await this.client.get<APIResponse<string[]>>("/api/v1/symbols");
+
+        if (!response.data.success) {
+            throw new Error(response.data.error?.message || "Unknown error");
+        }
+
+        return response.data.data!;
+    }
+
     // ============= Backtest Endpoints =============
     async runBacktest(
         strategyConfig: Record<string, unknown>,
