@@ -9,6 +9,8 @@ import { Loader2Icon, PlayIcon, SettingsIcon } from "lucide-react";
 import type { BacktestResult } from "@/types/market.types";
 import { toast } from "sonner";
 
+import { useKeyboardShortcut } from "@/hooks/useKeyboardShortcut";
+
 export const BacktestForm: React.FC = () => {
     const { selectedSymbol, selectedTimeframe } = useAppStore();
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -49,6 +51,10 @@ export const BacktestForm: React.FC = () => {
             toast.error(`Backtest failed: ${error.message}`);
         },
     });
+
+    useKeyboardShortcut("enter", () => {
+        runBacktest();
+    }, { ctrlKey: true, preventDefault: true });
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -120,6 +126,7 @@ export const BacktestForm: React.FC = () => {
                         type="submit"
                         className="w-full"
                         disabled={isPending}
+                        title="Run Backtest (Ctrl+Enter)"
                     >
                         {isPending ? (
                             <>

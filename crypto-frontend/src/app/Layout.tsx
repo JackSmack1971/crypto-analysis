@@ -7,10 +7,13 @@ import { MenuIcon, XIcon, SunIcon, MoonIcon } from "lucide-react";
 import { Toaster } from "@/components/ui/Toast";
 import { WatchlistManager } from "@/components/sidebar/WatchlistManager";
 import { OnboardingTour } from "@/components/onboarding/OnboardingTour";
+import { useKeyboardShortcut } from "@/hooks/useKeyboardShortcut";
 
 export const Layout: React.FC = () => {
     const { sidebarOpen, toggleSidebar, chartPreferences, updateChartPreferences } =
         useAppStore();
+
+    useKeyboardShortcut("b", toggleSidebar, { ctrlKey: true, preventDefault: true });
 
     const toggleTheme = () => {
         updateChartPreferences({
@@ -56,6 +59,7 @@ export const Layout: React.FC = () => {
                             onClick={toggleSidebar}
                             className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
                             aria-label="Toggle sidebar"
+                            title="Toggle Sidebar (Ctrl+B)"
                         >
                             {sidebarOpen ? <XIcon size={20} /> : <MenuIcon size={20} />}
                         </button>

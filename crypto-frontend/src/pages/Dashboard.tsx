@@ -13,12 +13,18 @@ import { Button } from "@/components/ui/Button";
 import { TableIcon, BarChartIcon } from "lucide-react";
 import { useState } from "react";
 
+import { useKeyboardShortcut } from "@/hooks/useKeyboardShortcut";
+
 export const Dashboard: React.FC = () => {
     const { selectedSymbol } = useAppStore();
     const { data, isLoading, error } = useMarketData();
     const [viewMode, setViewMode] = useState<"chart" | "table">("chart");
 
     const { data: indicators } = useIndicators();
+
+    useKeyboardShortcut("v", () => {
+        setViewMode((prev) => (prev === "chart" ? "table" : "chart"));
+    }, { altKey: true, preventDefault: true });
 
     return (
         <div className="space-y-4">
@@ -35,6 +41,7 @@ export const Dashboard: React.FC = () => {
                             onClick={() => setViewMode("chart")}
                             className="h-8 w-8 p-0"
                             aria-label="View Chart"
+                            title="Chart View (Alt+V)"
                         >
                             <BarChartIcon size={16} />
                         </Button>
@@ -44,6 +51,7 @@ export const Dashboard: React.FC = () => {
                             onClick={() => setViewMode("table")}
                             className="h-8 w-8 p-0"
                             aria-label="View Data Table"
+                            title="Table View (Alt+V)"
                         >
                             <TableIcon size={16} />
                         </Button>
