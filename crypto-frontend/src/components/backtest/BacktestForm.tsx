@@ -57,7 +57,7 @@ export const BacktestForm: React.FC = () => {
 
     return (
         <>
-            <Card className="p-4">
+            <Card id="tour-backtest" className="p-4">
                 <div className="flex items-center justify-between mb-4">
                     <h3 className="font-semibold flex items-center gap-2">
                         <SettingsIcon size={16} />

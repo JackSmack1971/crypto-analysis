@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { MenuIcon, XIcon, SunIcon, MoonIcon } from "lucide-react";
 import { Toaster } from "@/components/ui/Toast";
 import { WatchlistManager } from "@/components/sidebar/WatchlistManager";
+import { OnboardingTour } from "@/components/onboarding/OnboardingTour";
 
 export const Layout: React.FC = () => {
     const { sidebarOpen, toggleSidebar, chartPreferences, updateChartPreferences } =
@@ -40,6 +41,7 @@ export const Layout: React.FC = () => {
             )}
         >
             <Toaster />
+            <OnboardingTour />
             {/* Navigation Bar */}
             <nav
                 className={cn(

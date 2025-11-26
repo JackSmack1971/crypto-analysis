@@ -28,7 +28,7 @@ export const Dashboard: React.FC = () => {
                     <SymbolSelector />
                 </div>
                 <div className="flex items-center gap-2">
-                    <div className="flex bg-gray-100 dark:bg-gray-800 p-1 rounded-lg">
+                    <div id="tour-view-toggle" className="flex bg-gray-100 dark:bg-gray-800 p-1 rounded-lg">
                         <Button
                             variant={viewMode === "chart" ? "secondary" : "ghost"}
                             size="sm"

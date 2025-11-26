@@ -85,52 +85,54 @@ export const WatchlistManager: React.FC = () => {
     };
 
     return (
-        <div className="space-y-4">
-            <div className="flex items-center justify-between">
-                <h2 className="text-sm font-semibold text-light-muted dark:text-dark-muted">Watchlists</h2>
-                <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-6 w-6 p-0"
-                    onClick={() => setIsCreating(true)}
-                    disabled={isCreating}
-                >
-                    <PlusIcon size={16} />
-                </Button>
-            </div>
-
-            {isCreating && (
-                <div className="flex items-center gap-2 mb-2">
-                    <input
-                        type="text"
-                        value={newWatchlistName}
-                        onChange={(e) => setNewWatchlistName(e.target.value)}
-                        className="flex-1 h-8 text-sm px-2 rounded border bg-transparent dark:border-gray-700 focus:outline-none focus:border-primary-500"
-                        placeholder="Name..."
-                        autoFocus
-                        onKeyDown={(e) => e.key === "Enter" && handleCreate()}
-                    />
+        <div id="tour-watchlist" className="flex flex-col h-full border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
+            <div className="p-4 border-b border-gray-200 dark:border-gray-800">
+                <div className="flex items-center justify-between">
+                    <h2 className="text-sm font-semibold text-light-muted dark:text-dark-muted">Watchlists</h2>
                     <Button
                         variant="ghost"
                         size="sm"
-                        className="h-8 w-8 p-0 text-green-500 hover:text-green-600"
-                        onClick={handleCreate}
-                        disabled={createMutation.isPending}
+                        className="h-6 w-6 p-0"
+                        onClick={() => setIsCreating(true)}
+                        disabled={isCreating}
                     >
-                        <CheckIcon size={16} />
-                    </Button>
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-8 w-8 p-0 text-red-500 hover:text-red-600"
-                        onClick={() => setIsCreating(false)}
-                    >
-                        <XIcon size={16} />
+                        <PlusIcon size={16} />
                     </Button>
                 </div>
-            )}
 
-            <div className="space-y-1">
+                {isCreating && (
+                    <div className="flex items-center gap-2 mt-2">
+                        <input
+                            type="text"
+                            value={newWatchlistName}
+                            onChange={(e) => setNewWatchlistName(e.target.value)}
+                            className="flex-1 h-8 text-sm px-2 rounded border bg-transparent dark:border-gray-700 focus:outline-none focus:border-primary-500"
+                            placeholder="Name..."
+                            autoFocus
+                            onKeyDown={(e) => e.key === "Enter" && handleCreate()}
+                        />
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 w-8 p-0 text-green-500 hover:text-green-600"
+                            onClick={handleCreate}
+                            disabled={createMutation.isPending}
+                        >
+                            <CheckIcon size={16} />
+                        </Button>
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 w-8 p-0 text-red-500 hover:text-red-600"
+                            onClick={() => setIsCreating(false)}
+                        >
+                            <XIcon size={16} />
+                        </Button>
+                    </div>
+                )}
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-2 space-y-1">
                 {isLoading ? (
                     Array.from({ length: 5 }).map((_, i) => (
                         <Skeleton key={i} className="h-9 w-full rounded-md" />

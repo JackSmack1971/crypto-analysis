@@ -22,6 +22,7 @@ interface AppState {
     // UI State
     sidebarOpen: boolean;
     fullscreenChart: boolean;
+    hasSeenOnboarding: boolean;
 
     // Actions
     setSymbol: (symbol: string) => void;
@@ -31,6 +32,7 @@ interface AppState {
     updateChartPreferences: (prefs: Partial<ChartPreferences>) => void;
     toggleSidebar: () => void;
     toggleFullscreen: () => void;
+    completeOnboarding: () => void;
     reset: () => void;
 }
 
@@ -47,6 +49,7 @@ const initialState = {
     activeIndicators: ["RSI", "MACD"] as Indicator[],
     sidebarOpen: true,
     fullscreenChart: false,
+    hasSeenOnboarding: false,
 };
 
 export const useAppStore = create<AppState>()(
@@ -81,6 +84,8 @@ export const useAppStore = create<AppState>()(
                 toggleFullscreen: () =>
                     set((state) => ({ fullscreenChart: !state.fullscreenChart })),
 
+                completeOnboarding: () => set({ hasSeenOnboarding: true }),
+
                 reset: () => set(initialState),
             }),
             {
@@ -90,6 +95,7 @@ export const useAppStore = create<AppState>()(
                     selectedTimeframe: state.selectedTimeframe,
                     chartPreferences: state.chartPreferences,
                     activeIndicators: state.activeIndicators,
+                    hasSeenOnboarding: state.hasSeenOnboarding,
                 }),
             }
         ),
