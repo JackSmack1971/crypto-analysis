@@ -1,0 +1,4 @@
+**Tech Stack:** 
+- **Backend:** Python 3.x, FastAPI (REST API), Uvicorn (ASGI server), SQLite (persistence), Pandas (data processing), CCXT (exchange integration), PyYAML (configuration), Streamlit (alternative UI)
+- **Frontend:** TypeScript, React 19.2.0, Vite 7.2.4 (build tooling), React Router DOM 7.9.6 (routing), Zustand 5.0.8 (state management), TanStack Query 5.90.10 (server state/caching), TanStack Table 8.21.3 (data grids), TanStack Virtual 3.13.12 (virtualization), Tailwind CSS 3.4.18 + Autoprefixer + PostCSS (styling), Axios 1.13.2 (HTTP client), Lightweight Charts 5.0.9 (financial charting), Framer Motion 12.23.24 (animations), Lucide React 0.554.0 (iconography), Zod 4.1.13 (schema validation), Sonner 2.0.7 (toast notifications)
+- **DevOps:** ESLint 9.39.1 + TypeScript ESLint 8.48.0 (linting), SWC (Fast Refresh)
