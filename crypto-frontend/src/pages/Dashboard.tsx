@@ -1,6 +1,7 @@
 import React from "react";
 import { TradingChart } from "@/components/chart/TradingChart";
 import { useMarketData } from "@/hooks/useMarketData";
+import { useIndicators } from "@/hooks/useIndicators";
 import { useAppStore } from "@/store/app.store";
 import { Card } from "@/components/ui/Card";
 import { TimeframeSelector } from "@/components/dashboard/TimeframeSelector";
@@ -16,6 +17,8 @@ export const Dashboard: React.FC = () => {
     const { selectedSymbol } = useAppStore();
     const { data, isLoading, error } = useMarketData();
     const [viewMode, setViewMode] = useState<"chart" | "table">("chart");
+
+    const { data: indicators } = useIndicators();
 
     return (
         <div className="space-y-4">
@@ -54,6 +57,7 @@ export const Dashboard: React.FC = () => {
                     {viewMode === "chart" ? (
                         <TradingChart
                             data={data?.ohlcv || []}
+                            indicators={indicators}
                             loading={isLoading}
                             error={error?.message}
                         />
