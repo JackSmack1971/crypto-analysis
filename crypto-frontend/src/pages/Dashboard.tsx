@@ -7,6 +7,7 @@ import { TimeframeSelector } from "@/components/dashboard/TimeframeSelector";
 import { SymbolSelector } from "@/components/dashboard/SymbolSelector";
 import { MarketDataTable } from "@/components/dashboard/MarketDataTable";
 import { IndicatorSelector } from "@/components/dashboard/IndicatorSelector";
+import { BacktestForm } from "@/components/backtest/BacktestForm";
 import { Button } from "@/components/ui/Button";
 import { TableIcon, BarChartIcon } from "lucide-react";
 import { useState } from "react";
@@ -82,8 +83,11 @@ export const Dashboard: React.FC = () => {
                         <h3 className="font-semibold mb-2">Active Indicators</h3>
                         <IndicatorSelector />
                     </Card>
+
+                    <BacktestForm />
                 </div>
             </div>
         </div>
+
     );
 };
