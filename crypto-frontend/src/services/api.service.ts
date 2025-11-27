@@ -1,7 +1,7 @@
 import axios, { type AxiosInstance, type AxiosError } from "axios";
 import type { MarketData, BacktestResult, MultiTimeframeData, APIResponse } from "@/types/market.types";
 import { useNotificationStore } from "@/store/notification.store";
-import { toast } from "@/components/ui/Toast";
+import { errorService } from "@/services/error.service";
 
 class APIService {
     private client: AxiosInstance;
@@ -37,6 +37,7 @@ class APIService {
             (error) => {
                 useNotificationStore.getState().stopLoading();
                 useNotificationStore.getState().setSystemStatus('error');
+                errorService.handleError(error);
                 return Promise.reject(error);
             }
         );
@@ -50,44 +51,22 @@ class APIService {
             (error: AxiosError<APIResponse<never>>) => {
                 useNotificationStore.getState().stopLoading();
                 useNotificationStore.getState().setSystemStatus('error');
-                this.handleError(error);
+
+                // Retry logic for GET requests
+                const config = error.config;
+                if (config && config.method === 'get' && !config.headers['X-Retry']) {
+                    const retry = () => {
+                        config.headers['X-Retry'] = 'true';
+                        return this.client(config);
+                    };
+                    errorService.handleError(error, { retry });
+                } else {
+                    errorService.handleError(error);
+                }
+
                 return Promise.reject(error);
             }
         );
-    }
-
-    private handleError(error: AxiosError<APIResponse<never>>): void {
-        if (!error.response) {
-            toast.error("Network error - please check your connection");
-            return;
-        }
-
-        const { status, data } = error.response;
-        const errorMessage = (data && !data.success && data.error?.message) || "An unexpected error occurred";
-
-        switch (status) {
-            case 400:
-                toast.error(`Invalid request: ${errorMessage}`);
-                break;
-            case 401:
-                toast.error("Authentication required");
-                // Redirect to login
-                break;
-            case 403:
-                toast.error("Access denied");
-                break;
-            case 404:
-                toast.error("Resource not found");
-                break;
-            case 429:
-                toast.error("Rate limit exceeded - please wait");
-                break;
-            case 500:
-                toast.error("Server error - please try again later");
-                break;
-            default:
-                toast.error(errorMessage);
-        }
     }
 
     // ============= Market Data Endpoints =============

@@ -9,6 +9,7 @@ import { GlobalLoadingIndicator } from "@/components/ui/GlobalLoadingIndicator";
 import { WatchlistManager } from "@/components/sidebar/WatchlistManager";
 import { OnboardingTour } from "@/components/onboarding/OnboardingTour";
 import { useKeyboardShortcut } from "@/hooks/useKeyboardShortcut";
+import { ErrorBoundary } from "@/components/error/ErrorBoundary";
 
 export const Layout: React.FC = () => {
     const { sidebarOpen, toggleSidebar, chartPreferences, updateChartPreferences } =
@@ -110,7 +111,9 @@ export const Layout: React.FC = () => {
                     )}
                 >
                     <div className="container mx-auto p-4">
-                        <Outlet />
+                        <ErrorBoundary>
+                            <Outlet />
+                        </ErrorBoundary>
                     </div>
                 </main>
             </div>
