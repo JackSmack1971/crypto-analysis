@@ -11,9 +11,14 @@ import { OnboardingTour } from "@/components/onboarding/OnboardingTour";
 import { useKeyboardShortcut } from "@/hooks/useKeyboardShortcut";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
 
+import { OnboardingWizard } from "@/components/onboarding/OnboardingWizard";
+import { Glossary } from "@/components/glossary/Glossary";
+import { BookIcon } from "lucide-react";
+
 export const Layout: React.FC = () => {
     const { sidebarOpen, toggleSidebar, chartPreferences, updateChartPreferences } =
         useAppStore();
+    const [glossaryOpen, setGlossaryOpen] = React.useState(false);
 
     useKeyboardShortcut("b", toggleSidebar, { ctrlKey: true, preventDefault: true });
 
@@ -74,6 +79,15 @@ export const Layout: React.FC = () => {
                         <Button
                             variant="ghost"
                             size="sm"
+                            onClick={() => setGlossaryOpen(true)}
+                            aria-label="Open Glossary"
+                            title="Crypto Glossary"
+                        >
+                            <BookIcon size={18} />
+                        </Button>
+                        <Button
+                            variant="ghost"
+                            size="sm"
                             onClick={toggleTheme}
                             aria-label="Toggle theme"
                         >
@@ -86,6 +100,9 @@ export const Layout: React.FC = () => {
                     </div>
                 </div>
             </nav>
+
+            <Glossary isOpen={glossaryOpen} onClose={() => setGlossaryOpen(false)} />
+            <OnboardingWizard />
 
             {/* Main Content Area */}
             <div className="flex">

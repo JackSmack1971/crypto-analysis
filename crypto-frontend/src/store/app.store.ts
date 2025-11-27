@@ -23,6 +23,8 @@ interface AppState {
     sidebarOpen: boolean;
     fullscreenChart: boolean;
     hasSeenOnboarding: boolean;
+    hasCompletedWizard: boolean;
+    userExperienceLevel: "beginner" | "intermediate" | "pro";
 
     // Actions
     setSymbol: (symbol: string) => void;
@@ -33,6 +35,8 @@ interface AppState {
     toggleSidebar: () => void;
     toggleFullscreen: () => void;
     completeOnboarding: () => void;
+    completeWizard: () => void;
+    setUserExperienceLevel: (level: "beginner" | "intermediate" | "pro") => void;
     reset: () => void;
 }
 
@@ -50,6 +54,8 @@ const initialState = {
     sidebarOpen: true,
     fullscreenChart: false,
     hasSeenOnboarding: false,
+    hasCompletedWizard: false,
+    userExperienceLevel: "intermediate" as const,
 };
 
 export const useAppStore = create<AppState>()(
@@ -86,6 +92,10 @@ export const useAppStore = create<AppState>()(
 
                 completeOnboarding: () => set({ hasSeenOnboarding: true }),
 
+                completeWizard: () => set({ hasCompletedWizard: true }),
+
+                setUserExperienceLevel: (level) => set({ userExperienceLevel: level }),
+
                 reset: () => set(initialState),
             }),
             {
@@ -96,6 +106,8 @@ export const useAppStore = create<AppState>()(
                     chartPreferences: state.chartPreferences,
                     activeIndicators: state.activeIndicators,
                     hasSeenOnboarding: state.hasSeenOnboarding,
+                    hasCompletedWizard: state.hasCompletedWizard,
+                    userExperienceLevel: state.userExperienceLevel,
                 }),
             }
         ),
