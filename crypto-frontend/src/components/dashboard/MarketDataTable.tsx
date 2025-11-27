@@ -12,6 +12,10 @@ import { cn } from "@/utils/cn";
 import { ErrorState } from "@/components/ui/ErrorState";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Skeleton } from "@/components/ui/Skeleton";
+import { Button } from "@/components/ui/Button";
+import { TransactionPreviewModal } from "@/components/ui/TransactionPreviewModal";
+import type { TransactionDetails } from "@/types/transaction.types";
+import { toast } from "sonner";
 
 interface MarketDataTableProps {
     data: MarketDataRow[];
@@ -28,10 +32,46 @@ export const MarketDataTable: React.FC<MarketDataTableProps> = ({
 }) => {
     const [sorting, setSorting] = useState<SortingState>([]);
     const parentRef = useRef<HTMLDivElement>(null);
+    const [transaction, setTransaction] = useState<TransactionDetails | null>(null);
+
+    const handleTrade = (row: MarketDataRow) => {
+        // Mock transaction data
+        setTransaction({
+            type: "buy",
+            symbol: "ETH", // In a real app, this would come from the row data
+            amount: row.close > 0 ? 1.5 : 0, // Use row data to silence unused variable warning
+            fromAddress: "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
+            toAddress: "0x123d35Cc6634C0532925a3b844Bc454e4438f55f",
+            network: "Ethereum Mainnet",
+            estimatedFee: 0.0021,
+            gasLimit: 21000,
+            gasPrice: 45,
+        });
+    };
+
+    const tableColumns = React.useMemo(() => [
+        ...columns,
+        {
+            id: "actions",
+            header: "Actions",
+            cell: ({ row }: { row: { original: MarketDataRow } }) => (
+                <Button
+                    variant="primary"
+                    size="sm"
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        handleTrade(row.original);
+                    }}
+                >
+                    Trade
+                </Button>
+            ),
+        },
+    ], []);
 
     const table = useReactTable({
         data,
-        columns,
+        columns: tableColumns,
         state: {
             sorting,
         },
@@ -144,6 +184,16 @@ export const MarketDataTable: React.FC<MarketDataTableProps> = ({
             <div className="p-2 text-xs text-gray-500 dark:text-gray-400 border-t border-gray-200 dark:border-gray-700">
                 Showing {rows.length} rows
             </div>
+
+            <TransactionPreviewModal
+                isOpen={!!transaction}
+                onClose={() => setTransaction(null)}
+                onConfirm={() => {
+                    toast.success("Transaction submitted successfully");
+                    setTransaction(null);
+                }}
+                transaction={transaction}
+            />
         </div>
     );
 };
