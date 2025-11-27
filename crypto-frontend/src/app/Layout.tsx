@@ -5,6 +5,7 @@ import { cn } from "@/utils/cn";
 import { Button } from "@/components/ui/Button";
 import { MenuIcon, XIcon, SunIcon, MoonIcon } from "lucide-react";
 import { Toaster } from "@/components/ui/Toast";
+import { GlobalLoadingIndicator } from "@/components/ui/GlobalLoadingIndicator";
 import { WatchlistManager } from "@/components/sidebar/WatchlistManager";
 import { OnboardingTour } from "@/components/onboarding/OnboardingTour";
 import { useKeyboardShortcut } from "@/hooks/useKeyboardShortcut";
@@ -44,6 +45,7 @@ export const Layout: React.FC = () => {
             )}
         >
             <Toaster />
+            <GlobalLoadingIndicator />
             <OnboardingTour />
             {/* Navigation Bar */}
             <nav

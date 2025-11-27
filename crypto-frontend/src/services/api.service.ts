@@ -1,6 +1,6 @@
 import axios, { type AxiosInstance, type AxiosError } from "axios";
 import type { MarketData, BacktestResult, MultiTimeframeData, APIResponse } from "@/types/market.types";
-
+import { useNotificationStore } from "@/store/notification.store";
 import { toast } from "@/components/ui/Toast";
 
 class APIService {
@@ -24,6 +24,9 @@ class APIService {
         // Request interceptor
         this.client.interceptors.request.use(
             (config) => {
+                // Start global loading
+                useNotificationStore.getState().startLoading();
+
                 // Add auth token if available
                 const token = localStorage.getItem("auth_token");
                 if (token) {
@@ -31,13 +34,22 @@ class APIService {
                 }
                 return config;
             },
-            (error) => Promise.reject(error)
+            (error) => {
+                useNotificationStore.getState().stopLoading();
+                useNotificationStore.getState().setSystemStatus('error');
+                return Promise.reject(error);
+            }
         );
 
         // Response interceptor
         this.client.interceptors.response.use(
-            (response) => response,
+            (response) => {
+                useNotificationStore.getState().stopLoading();
+                return response;
+            },
             (error: AxiosError<APIResponse<never>>) => {
+                useNotificationStore.getState().stopLoading();
+                useNotificationStore.getState().setSystemStatus('error');
                 this.handleError(error);
                 return Promise.reject(error);
             }
