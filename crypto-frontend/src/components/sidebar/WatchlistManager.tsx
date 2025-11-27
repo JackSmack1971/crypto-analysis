@@ -8,6 +8,7 @@ import { PlusIcon, PencilIcon, TrashIcon, CheckIcon, XIcon, DownloadIcon } from 
 import { toast } from "sonner";
 import { cn } from "@/utils/cn";
 import { exportToCsv } from "@/utils/export";
+import { ConfirmationDialog } from "@/components/ui/ConfirmationDialog";
 
 export const WatchlistManager: React.FC = () => {
     const { selectedWatchlist, setWatchlist } = useAppStore();
@@ -69,6 +70,8 @@ export const WatchlistManager: React.FC = () => {
             toast.error(error.message);
         },
     });
+
+    const [watchlistToDelete, setWatchlistToDelete] = useState<string | null>(null);
 
     const handleCreate = () => {
         if (!newWatchlistName.trim()) return;
@@ -226,9 +229,7 @@ export const WatchlistManager: React.FC = () => {
                                             className="h-7 w-7 p-0 text-gray-500 hover:text-red-500"
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                if (confirm(`Delete watchlist "${wl.name}"?`)) {
-                                                    deleteMutation.mutate(wl.name);
-                                                }
+                                                setWatchlistToDelete(wl.name);
                                             }}
                                         >
                                             <TrashIcon size={12} />
@@ -245,6 +246,25 @@ export const WatchlistManager: React.FC = () => {
                     </div>
                 )}
             </div>
+
+            <ConfirmationDialog
+                isOpen={!!watchlistToDelete}
+                onClose={() => setWatchlistToDelete(null)}
+                onConfirm={() => {
+                    if (watchlistToDelete) {
+                        deleteMutation.mutate(watchlistToDelete);
+                        setWatchlistToDelete(null);
+                    }
+                }}
+                title="Delete Watchlist"
+                description={`Are you sure you want to delete "${watchlistToDelete}"? This action cannot be undone.`}
+                confirmText="Delete"
+                variant="destructive"
+                checklist={[
+                    "I understand this action cannot be undone",
+                ]}
+                isLoading={deleteMutation.isPending}
+            />
         </div>
     );
 };
