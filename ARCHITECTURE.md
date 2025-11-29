@@ -1,42 +1,45 @@
-# ARCHITECTURE.md: Health Endpoint Implementation
+# ARCHITECTURE.md: Frontend Test Infrastructure Setup
 
 ## 1. Analysis
-The API currently lacks a dedicated health check endpoint. This is essential for monitoring, load balancers, and container orchestration (e.g., Kubernetes liveness probes).
+The frontend currently lacks an automated testing framework. To ensure UI reliability and enable future CI/CD integration, we need to establish a robust testing foundation using `Vitest` and `React Testing Library`.
 
 **Requirements:**
-- **Endpoint:** `GET /health`
-- **Response:** JSON `{"status": "ok", "timestamp": <iso_timestamp>}`
-- **Status Code:** 200 OK
-- **Logic:** Minimal logic to confirm the API server is up and running.
+- **Framework:** `Vitest` (Fast, Vite-native)
+- **Environment:** `jsdom` (Browser simulation)
+- **Utilities:** `@testing-library/react`, `@testing-library/jest-dom`, `@testing-library/user-event`
+- **Integration:** Must work with existing `vite.config.ts` and path aliases (`@/`).
 
 **Constraints:**
-- Must be added to `api/main.py`.
-- Must be covered by automated tests.
+- Configuration should be in `vitest.config.ts` (or extend `vite.config.ts`).
+- Setup file required for global test environment configuration (e.g., `jest-dom` matchers).
 
 ## 2. Structure & File Plan
 
 ### Modified Files
-- `api/main.py`: Add the `/health` route handler.
+- `crypto-frontend/package.json`: Add test dependencies and `test` script.
 
 ### New Files
-- `tests/test_api_health.py`: Unit test for the new endpoint.
+- `crypto-frontend/vitest.config.ts`: Configuration for Vitest.
+- `crypto-frontend/src/test/setup.ts`: Global test setup (imports `jest-dom`).
+- `crypto-frontend/src/App.test.tsx`: Smoke test for the App component.
 
 ### Directory Layout
 ```
-/crypto-analysis
-├── api/
-│   └── main.py         # [MOD] Add /health
-└── tests/
-    └── test_api_health.py # [NEW] Test case
+/crypto-analysis/crypto-frontend
+├── package.json        # [MOD] Add dependencies
+├── vitest.config.ts    # [NEW] Config
+└── src/
+    ├── test/
+    │   └── setup.ts    # [NEW] Global setup
+    └── App.test.tsx    # [NEW] Smoke test
 ```
 
-## 3. Data Flow
-1.  **Request:** `GET /health`
-2.  **Handler:** `health_check()` function in `api/main.py`
-3.  **Response:** `{"status": "ok", "timestamp": "..."}`
+## 3. Data Flow (Test Execution)
+1.  **Discovery:** `npm test` -> `vitest` reads config -> scans `src/**/*.test.tsx`.
+2.  **Setup:** `src/test/setup.ts` initializes `jsdom` environment and matchers.
+3.  **Execution:** `render(<App />)` mounts component in virtual DOM.
+4.  **Assertion:** Check for element presence (e.g., "Crypto Analysis Platform").
 
 ## 4. Verification Strategy
-1.  **Automated Test:** Run `pytest tests/test_api_health.py`.
-    - Expect: 1 passed test.
-    - Assertions: Status code 200, JSON body contains "status": "ok".
-2.  **Manual Verification (Optional):** `curl http://localhost:8000/health` (if server running).
+1.  **Dependency Install:** `npm install` (simulated via `package.json` update) -> Expect success.
+2.  **Execution:** `npm test -- --run` -> Expect 1 passed test (exit code 0).

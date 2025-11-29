@@ -7,10 +7,12 @@ I have successfully set up the `pytest` infrastructure for the Crypto Analysis P
 - **Configuration**: Created `pytest.ini` with async support and coverage settings.
 - **Structure**: Created `tests/` directory with `conftest.py` (fixtures) and `test_smoke.py` (verification).
 - **Health Endpoint**: Added `GET /health` to `api/main.py` and `tests/test_api_health.py`.
+- **Frontend Tests**: Configured `Vitest` with `jsdom` and added `src/App.test.tsx`.
 
 ## Verification Steps
 Since the automated environment could not execute the tests directly, please run the following commands in your terminal:
 
+### Backend
 1.  **Install Dependencies:**
     ```bash
     pip install -r requirements.txt
@@ -27,6 +29,19 @@ Since the automated environment could not execute the tests directly, please run
     pytest
     ```
     *Expected Output:* 3 passed tests (exit code 0).
+
+### Frontend
+1.  **Install Dependencies:**
+    ```bash
+    cd crypto-frontend
+    npm install
+    ```
+
+2.  **Run Tests:**
+    ```bash
+    npm test -- --run
+    ```
+    *Expected Output:* 1 passed test (App renders without crashing).
 
 ## Next Steps
 - Implement unit tests for `services/data_fetcher.py`.
