@@ -54,7 +54,7 @@ export const OnboardingWizard: React.FC = () => {
                                 <div className="font-medium capitalize text-gray-900 dark:text-white">
                                     {level}
                                 </div>
-                                <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">
                                     {level === "beginner" && "Simple charts, essential indicators"}
                                     {level === "intermediate" && "Standard tools, balanced view"}
                                     {level === "pro" && "Advanced technicals, full control"}
@@ -122,7 +122,7 @@ export const OnboardingWizard: React.FC = () => {
             className="max-w-md"
         >
             <div className="space-y-6">
-                <p className="text-sm text-gray-500 dark:text-gray-400">
+                <p className="text-sm text-gray-600 dark:text-gray-300">
                     {currentStep.description}
                 </p>
 
@@ -134,13 +134,14 @@ export const OnboardingWizard: React.FC = () => {
                             <div
                                 key={i}
                                 className={cn(
-                                    "h-1.5 w-6 rounded-full transition-colors",
+                                    "h-2 w-8 rounded-full transition-colors",
                                     i === step
                                         ? "bg-primary-500"
                                         : i < step
                                             ? "bg-primary-200 dark:bg-primary-900"
                                             : "bg-gray-200 dark:bg-gray-700"
-                                )}
+                                )
+                                }
                             />
                         ))}
                     </div>

@@ -21,7 +21,17 @@ export default {
                 },
                 primary: {
                     DEFAULT: "#00C9A7",
-                    dark: "#00A389",
+                    50: "#E6F9F6",
+                    100: "#C0F0E8",
+                    200: "#94E4D8",
+                    300: "#66D6C6",
+                    400: "#3DC7B3",
+                    500: "#00C9A7",
+                    600: "#00A389", // WCAG AA Large Text on White
+                    700: "#007F6D", // WCAG AA Normal Text on White
+                    800: "#005C50",
+                    900: "#003B34",
+                    950: "#001F1C",
                 },
                 bullish: "#00C9A7",
                 bearish: "#FF4757",
