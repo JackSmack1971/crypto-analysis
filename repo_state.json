@@ -1,0 +1,261 @@
+{
+    "repo": {
+        "root": "/crypto-analysis",
+        "primary_branch": "main",
+        "commit_sha": "ae207ed"
+    },
+    "inventory": {
+        "files_total": 85,
+        "languages": [
+            {
+                "name": "Python",
+                "sloc_approx": 1500
+            },
+            {
+                "name": "TypeScript",
+                "sloc_approx": 2500
+            }
+        ],
+        "key_artifacts": {
+            "docs": [
+                "GEMINI.md",
+                "README.md",
+                "TECH_STACK.md"
+            ],
+            "specs": [
+                "GEMINI.md"
+            ],
+            "packaging": [
+                "requirements.txt",
+                "crypto-frontend/package.json"
+            ],
+            "runtime": [
+                "api/main.py",
+                "app.py",
+                "crypto-frontend/vite.config.ts"
+            ],
+            "ci": [],
+            "quality": [
+                "crypto-frontend/eslint.config.js"
+            ],
+            "infra": [],
+            "secrets_examples": []
+        }
+    },
+    "signals": [
+        {
+            "area": "docs",
+            "status_score": 4,
+            "findings": [
+                {
+                    "claim": "Comprehensive context and architecture documentation exists.",
+                    "evidence": [
+                        {
+                            "path": "GEMINI.md",
+                            "lines": "L1-L800"
+                        }
+                    ],
+                    "type": "fact",
+                    "confidence": 1.0
+                }
+            ]
+        },
+        {
+            "area": "build",
+            "status_score": 3,
+            "findings": [
+                {
+                    "claim": "Standard package managers (pip, npm) in use.",
+                    "evidence": [
+                        {
+                            "path": "requirements.txt",
+                            "lines": "L1-L10"
+                        },
+                        {
+                            "path": "crypto-frontend/package.json",
+                            "lines": "L1-L47"
+                        }
+                    ],
+                    "type": "fact",
+                    "confidence": 1.0
+                },
+                {
+                    "claim": "No containerization detected.",
+                    "evidence": [],
+                    "type": "fact",
+                    "confidence": 1.0
+                }
+            ]
+        },
+        {
+            "area": "tests",
+            "status_score": 0,
+            "findings": [
+                {
+                    "claim": "No automated test suite detected.",
+                    "evidence": [
+                        {
+                            "path": "GEMINI.md",
+                            "lines": "L395-L395"
+                        }
+                    ],
+                    "type": "fact",
+                    "confidence": 1.0
+                }
+            ]
+        },
+        {
+            "area": "ci",
+            "status_score": 0,
+            "findings": [
+                {
+                    "claim": "No CI/CD pipeline detected.",
+                    "evidence": [
+                        {
+                            "path": "GEMINI.md",
+                            "lines": "L298-L298"
+                        }
+                    ],
+                    "type": "fact",
+                    "confidence": 1.0
+                }
+            ]
+        },
+        {
+            "area": "security",
+            "status_score": 2,
+            "findings": [
+                {
+                    "claim": "CORS configured to allow all origins.",
+                    "evidence": [
+                        {
+                            "path": "GEMINI.md",
+                            "lines": "L678-L678"
+                        }
+                    ],
+                    "type": "fact",
+                    "confidence": 1.0
+                }
+            ]
+        }
+    ],
+    "project_state": {
+        "phase": "MVP-building",
+        "confidence": 0.9,
+        "rationale": "Core functionality exists and is documented, but critical production pillars (Tests, CI, Docker) are missing.",
+        "workstreams": [
+            {
+                "name": "Backend Core",
+                "status": "stabilizing",
+                "evidence": [
+                    {
+                        "path": "api/main.py",
+                        "lines": "L1-L298"
+                    }
+                ]
+            },
+            {
+                "name": "Frontend UI",
+                "status": "in-progress",
+                "evidence": [
+                    {
+                        "path": "crypto-frontend/src/components/onboarding/OnboardingWizard.tsx",
+                        "lines": "L1-L100"
+                    }
+                ]
+            },
+            {
+                "name": "Testing",
+                "status": "blocked",
+                "evidence": [
+                    {
+                        "path": "GEMINI.md",
+                        "lines": "L395-L395"
+                    }
+                ]
+            }
+        ],
+        "risks": [
+            {
+                "id": "R-001",
+                "title": "Regression Risk",
+                "likelihood": "high",
+                "impact": "high",
+                "mitigation": "Implement automated test suite.",
+                "evidence": [
+                    {
+                        "path": "GEMINI.md",
+                        "lines": "L395-L395"
+                    }
+                ]
+            },
+            {
+                "id": "R-002",
+                "title": "Security Vulnerability (CORS/Auth)",
+                "likelihood": "med",
+                "impact": "high",
+                "mitigation": "Restrict CORS and implement auth.",
+                "evidence": [
+                    {
+                        "path": "GEMINI.md",
+                        "lines": "L678-L680"
+                    }
+                ]
+            }
+        ]
+    },
+    "actions": [
+        {
+            "id": "A-001",
+            "title": "Initialize Test Suite",
+            "effort": "S",
+            "expected_lift": {
+                "area": "tests",
+                "delta": 2
+            },
+            "acceptance_checks": [
+                "pytest runs successfully",
+                "npm test runs successfully"
+            ],
+            "touch_files": [
+                "tests/",
+                "crypto-frontend/src/App.test.tsx"
+            ]
+        },
+        {
+            "id": "A-002",
+            "title": "Containerize Application",
+            "effort": "M",
+            "expected_lift": {
+                "area": "operations",
+                "delta": 2
+            },
+            "acceptance_checks": [
+                "docker-compose up starts all services"
+            ],
+            "touch_files": [
+                "Dockerfile",
+                "docker-compose.yml"
+            ]
+        },
+        {
+            "id": "A-003",
+            "title": "Setup Basic CI",
+            "effort": "S",
+            "expected_lift": {
+                "area": "ci",
+                "delta": 2
+            },
+            "acceptance_checks": [
+                "GitHub Action runs on push"
+            ],
+            "touch_files": [
+                ".github/workflows/ci.yml"
+            ]
+        }
+    ],
+    "coverage_gaps": [
+        "Cannot verify deployment target (no config).",
+        "Cannot verify external API connectivity (no runtime secrets)."
+    ]
+}
