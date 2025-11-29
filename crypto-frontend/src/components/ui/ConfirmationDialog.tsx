@@ -55,7 +55,7 @@ export const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
                         </div>
                     )}
                     <div className="space-y-2">
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
                             {description}
                         </p>
                     </div>

@@ -18,7 +18,7 @@ export const ErrorFallback: React.FC<ErrorFallbackProps> = ({ error, resetErrorB
                 We encountered an unexpected error. Please try reloading the page.
             </p>
             <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg mb-6 max-w-md w-full overflow-auto text-left">
-                <code className="text-sm text-red-500 font-mono break-all">
+                <code className="text-sm text-red-600 font-mono break-all">
                     {error.message}
                 </code>
             </div>
