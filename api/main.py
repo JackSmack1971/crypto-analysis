@@ -50,6 +50,13 @@ mtf_analyzer = MultiTimeframeAnalyzer(storage)
 async def shutdown_event():
     await fetcher.close()
 
+@app.get("/health")
+async def health_check():
+    return {
+        "status": "ok",
+        "timestamp": datetime.now().isoformat()
+    }
+
 def success_response(data: Any):
     return APIResponse(success=True, data=data)
 
